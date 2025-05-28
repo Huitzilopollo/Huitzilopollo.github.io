@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Información de Contacto por QR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        #info { margin-top: 2em; }
+        label { display: block; margin-top: 1em; }
+        input, textarea { width: 100%; padding: 0.5em; }
+        button { margin-top: 1em; padding: 0.7em 1.5em; }
+    </style>
+</head>
+<body>
+    <h1>Escanea el Código QR</h1>
+    <p>Escanea el código QR para ver la información de contacto y la ubicación donde fue leído.</p>
+    <button onclick="getLocation()">Obtener ubicación actual</button>
+    <div id="info"></div>
+
+    <script>
+        // Simulación de datos obtenidos del QR (en un caso real, esto vendría del QR)
+        const datosContacto = {
+            tipo: "Persona", // o "Mascota"
+            nombre: "Juan Pérez",
+            telefono: "+34 600 123 456",
+            email: "juan.perez@email.com",
+            direccion: "Calle Falsa 123, Ciudad, País"
+        };
+
+        function mostrarInfo(ubicacion) {
+            const infoDiv = document.getElementById('info');
+            infoDiv.innerHTML = `
+                <h2>Datos de ${datosContacto.tipo}</h2>
+                <strong>Nombre:</strong> ${datosContacto.nombre}<br>
+                <strong>Teléfono:</strong> ${datosContacto.telefono}<br>
+                <strong>Email:</strong> ${datosContacto.email}<br>
+                <strong>Dirección registrada:</strong> ${datosContacto.direccion}<br>
+                <hr>
+                <h3>Ubicación donde se leyó el QR:</h3>
+                <strong>Latitud:</strong> ${ubicacion.latitude}<br>
+                <strong>Longitud:</strong> ${ubicacion.longitude}<br>
+                <a href="https://www.google.com/maps/search/?api=1&query=${ubicacion.latitude},${ubicacion.longitude}" target="_blank">Ver en Google Maps</a>
+            `;
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        mostrarInfo(position.coords);
+                    },
+                    (error) => {
+                        document.getElementById('info').innerText = "No se pudo obtener la ubicación.";
+                    }
+                );
+            } else {
+                document.getElementById('info').innerText = "La geolocalización no es soportada por este navegador.";
+            }
+        }
+    </script>
+</body>
+</html>
