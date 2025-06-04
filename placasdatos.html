@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos de contacto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+        }
+        /* Custom styles for the table */
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0; /* Light gray border */
+        }
+        .data-table th {
+            background-color: #e2e8f0; /* Light gray header background */
+            font-weight: 600;
+            color: #2d3748; /* Darker text for headers */
+        }
+        .data-table tbody tr:hover {
+            background-color: #edf2f7; /* Lighter hover background */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+            Datos de contacto
+        </h1>
+
+        <div id="loadingMessage" class="text-center text-gray-600 mb-4 animate-pulse">
+            Cargando datos...
+        </div>
+
+        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">¡Error!</strong>
+            <span class="block sm:inline" id="errorText">No se pudieron cargar los datos.</span>
+        </div>
+
+        <div id="sheetDataContainer" class="overflow-x-auto">
+            </div>
+    </div>
+
+    <script>
+        // La URL de tu hoja de cálculo de Google Sheets publicada como CSV.
+        // Asegúrate de que esta URL sea la correcta de tu hoja de cálculo.
+        const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQYVheOuwCS7sIza6boK0thyjYaxTBnqKPmmNAgI1pwWeJI4HZ4-upbRqWZTSXV6L0PcPlkYLQcRQdf/pub?output=csv';
+
+        const sheetDataContainer = document.getElementById('sheetDataContainer');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        /**
+         * Fetches CSV data from the provided URL.
+         * @param {string} url - The URL of the CSV file.
+         * @returns {Promise<string>} - A promise that resolves with the CSV text.
+         */
+        async function fetchCsvData(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('Error fetching CSV data:', error);
+                throw new Error('Failed to fetch data. Please check the URL and network connection.');
+            }
+        }
+
+        /**
+         * Parses CSV text into an array of objects.
+         * Assumes the first row is the header.
+         * @param {string} csvText - The CSV data as a string.
+         * @returns {Array<Object>} - An array of objects, where each object represents a row.
+         */
+        function parseCsv(csvText) {
+            const lines = csvText.trim().split('\n');
+            if (lines.length === 0) {
+                return [];
+            }
+
+            // Simple CSV parsing: split by comma, handle quotes if necessary for more robust parsing
+            // For simplicity, we'll assume no commas within data fields without quotes.
+            const headers = lines[0].split(',').map(header => header.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(value => value.trim());
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index] || ''; // Assign value, or empty string if missing
+                });
+                data.push(row);
+            }
+            return data;
+        }
+
+        /**
+         * Renders the parsed data into an HTML table.
+         * @param {Array<Object>} data - The array of objects representing the sheet data.
+         */
+        function renderTable(data) {
+            if (data.length === 0) {
+                sheetDataContainer.innerHTML = '<p class="text-center text-gray-500">No hay datos disponibles.</p>';
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'min-w-full bg-white rounded-lg overflow-hidden shadow-md data-table';
+
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            Object.keys(data[0]).forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create table body
+            const tbody = document.createElement('tbody');
+            data.forEach(rowData => {
+                const tr = document.createElement('tr');
+                Object.values(rowData).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+
+            sheetDataContainer.innerHTML = ''; // Clear previous content
+            sheetDataContainer.appendChild(table);
+        }
+
+        /**
+         * Initializes the data loading and display process.
+         */
+        async function init() {
+            loadingMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            sheetDataContainer.innerHTML = ''; // Clear previous data
+
+            // Check if the URL is still the placeholder or empty
+            if (GOOGLE_SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL_HERE' || !GOOGLE_SHEET_CSV_URL) {
+                loadingMessage.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+                errorText.textContent = 'Por favor, reemplaza "YOUR_GOOGLE_SHEET_CSV_URL_HERE" con la URL de tu hoja de cálculo publicada.';
+                return;
+            }
+
+            try {
+                const csvText = await fetchCsvData(GOOGLE_SHEET_CSV_URL);
+                const parsedData = parseCsv(csvText);
+                renderTable(parsedData);
+            } catch (error) {
+                errorMessage.classList.remove('hidden');
+                errorText.textContent = error.message;
+                console.error('Initialization error:', error);
+            } finally {
+                loadingMessage.classList.add('hidden');
+            }
+        }
+
+        // Run the initialization function when the window loads
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<title>app hurones</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        color: #333;
+        font-family: 'Times New Roman', Times, serif;
+    }
+    p {
+        color: #555;
+        font-family: 'Outfit', sans-serif;
+    }
+    a {
+        color: #0066cc;
+        text-decoration: none;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    img {
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-color: #000606;
+        border-width: 2px;
+        border-style: solid;
+        background-color: rgb(251, 249, 249);
+        padding: 10px;
+        margin: 20px 20px 20px 20px;
+    }
+    footer {
+        margin-top: 20px;
+        font-size: 0.8em;
+        color: #777;
+    }
+    .ama {
+        background-color: #f7d698;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    .odia {
+        background-color: #fc4c4c;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+        background-color: #ad7c21;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>Hola Mundo</h1>
+    <p>Este es un ejemplo de una página HTML básica.</p>
+    <p>¡Bienvenido a mi sitio web!</p>
+    <p>Esta es una segunda línea de texto.</p>
+    <!-- Asi se pone un comentario -->
+    <p>despues de esto va el main</p>
+    <main>
+        <h2>Contenido Principal</h2>
+        <a href="#Descripcion-1">Descripcion 1</a><br>
+        <a href="#Descripcion-2">Descripcion 2</a><br>
+        <a href="#Descripcion-3">Descripcion 3</a><br>
+
+        <img src="https://i.imgur.com/WGWRvnt.jpeg" alt="Jinx" width="300" height="300">
+        <img src="D:\placas 3\voli.jpg" alt="Imagen de un hurón" width="300" height="300">
+
+        <h3 id="Descripcion-1" style="color: blue;">  Descripción del Hurón </h3>
+         <p>El hurón doméstico (Mustela putorius furo) es del orden Carnivora, familia Mustelidae, y ha vivido en cautividad desde hace >2000 años. Inicialmente se utilizaban sobre todo para la caza, pero ahora los hurones son mascotas comunes en todo el mundo. También se utilizan como animales de investigación, a menudo en estudios del aparato respiratorio, en particular las infecciones por el virus de la influenza, y como modelo para la infección por Helicobacter sp.</p>
+<br>
+<br>
+
+        <h3 id="Descripcion-2"> Descripción 2</h3>
+         <p>Físicamente, los hurones tienen una forma corporal típica mustélida, siendo largos y delgados. Su pelo tiene muchas variaciones de color, y entre las más comunes se encuentran el blanco con ojos rosados, el sable, el canela y el chocolate. Son frecuentes las manchas blancas en la garganta o en los dedos. El color y la densidad del pelaje cambian con la estación; se oscurecerá y engrosará en invierno, y se aclarará y mudará en verano.</p>
+<br>
+<br>
+
+        <h3 id="Descripcion-3"> Descripción 3</h3>
+         <p>Los hurones suelen alcanzar su tamaño completo a los 5-6 meses de edad y se consideran adultos al año de edad. La esperanza de vida por lo general es de 6 a 10 años, pero muchos hurones tienen una esperanza de vida más corta debido a accidentes o enfermedades.</p>
+<hr>
+<h3>Cosas de Jinx </h3>
+<div class="ama">
+         <p>Cosas que <em> ama </em></p>
+            <ul>
+                <li>Comer</li>
+                <li>Jugar</li>
+                <li>Dormir</li>
+            </ul>
+</div>
+<div class="odia">
+
+           <strong> <p>Cosas que odia</p></strong>
+            <ol>
+                <li>Que la despierten</li>
+                <li>Que la bañen</li>
+                <li>Que la dejen sola</li>
+            </ol>
+</div>
+    <form action="El archivo que maneja o la base de datos en si" method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Perez"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        <label><input type="radio" id="opcion1" name="opcion" value="opcion1">interior</label><br>
+       <label> <input type="radio" id="opcion2" name="opcion" value="opcion2">exterior</label><br>
+        <label for="mensaje">Mensaje:</label><br>
+        <textarea id="mensaje" name="mensaje" rows="4" cols="50"></textarea><br><br>
+        
+
+    <checkbox id="terminos" name="terminos" value="acepto">
+        <label for="terminos">Acepto los términos y condiciones</label><br><br>
+        <input type="checkbox" id="suscripcion" name="suscripcion" value="si" checked>
+        <label for="suscripcion">Suscribirme a la newsletter</label><br><br>
+        <input type="submit" value="Enviar">
+    </form>
+        </main>
+        <footer>
+            <small>Creado por Kalidoscopio
+            <p>Derechos reservados &copy; 2023</p>
+            <p>Contacto: <a href="https://www.instagram.com/kalidoscopio.mx/">instagram</a> </p></small>
+        </footer>
+</body>
+</html>

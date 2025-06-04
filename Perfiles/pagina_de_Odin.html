@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Ayuda a Odin a volver a casa!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        img {
+            display: block;
+            margin: 0 auto;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid #3498db;
+            object-fit: cover;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        strong {
+            color: #2c3e50;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        #info {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .whatsapp-btn {
+            background-color: #25D366;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+        
+        .contact-section {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .location-section {
+            background-color: #fff8e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        #imagen-preview {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Ayuda a Odin a volver a casa!</h1>
+
+        <img id="imagen-preview" src="https://via.placeholder.com/150" alt="Imagen de Odin">
+
+        <div class="contact-section">
+            <p><strong>Nombre:</strong> Odin</p>
+            <p><strong>Teléfono de contacto:</strong> <a href="tel:525546905995" id="telefono1">525546905995</a></p>
+            <p><strong>Dirección:</strong> Frias 246</p>
+            <p><strong>Veterinario:</strong> Gustavo</p>
+            <p><strong>Observaciones:</strong> El mejor perro del mundo</p>
+        </div>
+
+        <p>Hola, mi nombre es Odin y si estás viendo esto necesito de tu ayuda para volver a casa. Puedes contactar a mi dueño al teléfono <a href="tel:525546905995">525546905995</a>. Vivo en Frias 246. Mi veterinario es Gustavo.</p>
+
+        <div class="location-section">
+            <h3>Ubicación actual</h3>
+            <p>Para ayudarme a regresar, por favor obtén mi ubicación actual y compártela con mi dueño:</p>
+            
+            <button onclick="getLocation()">Obtener mi ubicación actual</button>
+            <div id="info">Presiona el botón para obtener la ubicación</div>
+            
+            <button class="whatsapp-btn" onclick="compartirPorWhatsApp()" id="btnWhatsApp" style="display:none;">
+                Enviar ubicación al dueño por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let ubicacionActual = null;
+        const telefonoDueño = "525546905995"; // Número fijo para evitar problemas con el DOM
+        
+        // Función para cargar imagen local (si existe)
+        function cargarImagenLocal() {
+            const imagenLocal = "D:\\placas 3\\Imagenes\\jinx.jpg";
+            const imgElement = document.getElementById('imagen-preview');
+            
+            // Intenta cargar la imagen local
+            const reader = new FileReader();
+            
+            // Esta parte es complicada porque navegadores no pueden acceder directamente a rutas locales
+            // Solución alternativa: usar un input file o una imagen online
+            // Por ahora dejamos el placeholder
+        }
+        
+        // Llamamos a la función al cargar la página
+        window.onload = cargarImagenLocal;
+        
+        function getLocation() {
+            const info = document.getElementById('info');
+            const btnWhatsApp = document.getElementById('btnWhatsApp');
+            
+            if (!navigator.geolocation) {
+                info.innerHTML = "Tu navegador no soporta geolocalización";
+                return;
+            }
+            
+            info.innerHTML = "Obteniendo ubicación...";
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    ubicacionActual = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    
+                    info.innerHTML = `
+                        <p><strong>Ubicación obtenida:</strong></p>
+                        <p>Latitud: ${ubicacionActual.lat}</p>
+                        <p>Longitud: ${ubicacionActual.lng}</p>
+                        <a href="https://www.google.com/maps?q=${ubicacionActual.lat},${ubicacionActual.lng}" target="_blank">
+                            Ver en Google Maps
+                        </a>
+                    `;
+                    
+                    btnWhatsApp.style.display = 'inline-block';
+                },
+                function(error) {
+                    let mensaje = "Error al obtener la ubicación: ";
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            mensaje += "Permiso denegado por el usuario";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            mensaje += "La información de ubicación no está disponible";
+                            break;
+                        case error.TIMEOUT:
+                            mensaje += "La solicitud de ubicación ha expirado";
+                            break;
+                        default:
+                            mensaje += "Ocurrió un error desconocido";
+                    }
+                    info.innerHTML = mensaje;
+                }
+            );
+        }
+        
+        function compartirPorWhatsApp() {
+            if (!ubicacionActual) {
+                alert("Primero obtén la ubicación actual");
+                return;
+            }
+            
+            // Limpiar el número (quitar espacios, guiones, etc.)
+            const telefonoLimpio = telefonoDueño.replace(/\D/g, '');
+            
+            const texto = `*¡Ayuda! Odin necesita regresar a casa*%0A%0A` +
+                          `Hola, encontré a Odin y necesita ayuda para volver contigo.%0A%0A` +
+                          `*Ubicación actual:*%0A` +
+                          `Latitud: ${ubicacionActual.lat}%0A` +
+                          `Longitud: ${ubicacionActual.lng}%0A` +
+                          `Ver en Google Maps: https://www.google.com/maps?q=${ubicacionActual.lat},${ubicacionActual.lng}%0A%0A` +
+                          `Por favor contáctame para coordinar su regreso.`;
+            
+            window.open(`https://wa.me/${telefonoLimpio}?text=${texto}`, '_blank');
+        }
+    </script>
+</body>
+</html>
